@@ -1,0 +1,43 @@
+import { LexState } from "./types";
+
+export function lexKeyword(s: string, search: string, state: LexState) {
+  let index = s.indexOf(search, state.cursor);
+  if (index - state.cursor == 0) {
+    state.cursor += search.length;
+    return true;
+  }
+
+  return false;
+}
+
+export function lexNumber(s: string, state: LexState) {
+  //If it's a key
+  if (s[state.cursor] == "0") {
+    return;
+  }
+
+  let num = "";
+
+  while (!isNaN(parseInt(s[state.cursor]))) {
+    num += s[state.cursor];
+    state.cursor++;
+  }
+
+  return parseInt(num);
+}
+
+export function lexString(s: string, state: LexState) {
+  function isAlphanumeric(s: string): boolean {
+    return /[a-z0-9]/.test(s);
+  }
+
+  if (!s && !s[state.cursor]) {
+    return;
+  }
+  var str = "";
+  while (state.cursor < s.length && isAlphanumeric(s[state.cursor])) {
+    str += s[state.cursor++];
+  }
+
+  return str;
+}

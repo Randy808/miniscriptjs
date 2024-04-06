@@ -8,3 +8,8 @@ export function calculateByteLenForValue(value: number) {
     (value > 0x7fffff ? 1 : 0)
   );
 }
+
+export function indent(text: string) {
+  // Add a tab at the start and after every new line
+  return "\t" + text.replace(/\n/g, "\n\t");
+}

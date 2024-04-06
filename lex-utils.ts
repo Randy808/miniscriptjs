@@ -28,7 +28,7 @@ export function lexNumber(s: string, state: LexState) {
 
 export function lexString(s: string, state: LexState) {
   function isAlphanumeric(s: string): boolean {
-    return /[a-z0-9]/.test(s);
+    return /[a-z0-9_]/.test(s);
   }
 
   if (!s && !s[state.cursor]) {

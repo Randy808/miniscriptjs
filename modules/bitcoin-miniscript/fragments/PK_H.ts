@@ -1,34 +1,31 @@
-import { COMMA, CLOSE_PAREN, NUMBER } from "../../../universal-tokens";
+import { CLOSE_PAREN, STRING } from "../../../universal-tokens";
 import { lexKeyword } from "../../../lex-utils";
-
-import { sanityCheck, Types } from "../../../miniscript-types";
+import { Types } from "../../../miniscript-types";
 import {
-  MiniscriptFragment,
   LexState,
-  Token,
+  MiniscriptFragment,
   MiniscriptFragmentStatic,
+  Token,
 } from "../../../types";
 import { ParseContext } from "../../../parser";
-import { calculateByteLenForValue } from "../../../utils";
 
-export class INP_VALUE
+export class PK_H
   extends MiniscriptFragmentStatic
   implements MiniscriptFragment
 {
-  static tokenType = "INP_VALUE";
-  index: number;
+  static tokenType = "PK_H";
+  hash: string;
   type: number;
 
-  constructor(index: number) {
+  constructor(hash: string) {
     super();
-    this.index = index;
+    this.hash = hash;
     this.type = this.getType();
-    sanityCheck(this.type);
   }
 
   static lex = (s: string, state: LexState): Token | undefined => {
     let position = state.cursor;
-    if (lexKeyword(s, "inp_value(", state)) {
+    if (lexKeyword(s, "pk_h(", state)) {
       return {
         tokenType: this.tokenType,
         position,
@@ -38,27 +35,32 @@ export class INP_VALUE
 
   static parse = (parseContext: ParseContext) => {
     parseContext.eat(this.tokenType);
-    let inputIndex = parseContext.eat(NUMBER.tokenType)?.value;
+    let hash = parseContext.eat(STRING.tokenType);
     parseContext.eat(CLOSE_PAREN.tokenType);
-    return new INP_VALUE(inputIndex);
+    return new PK_H(hash.value);
   };
 
   getType = () => {
+    //"Knudemsxk
     return (
-      Types.BaseType |
-      Types.ZeroArgProperty |
-      Types.ForcedProperty |
+      Types.KeyType |
+      Types.NonzeroArgProperty |
+      Types.UnitProperty |
+      Types.DissatisfiableProperty |
+      Types.ExpressionProperty |
       Types.NonmalleableProperty |
+      Types.SafeProperty |
       Types.ExpensiveVerify |
       Types.NoCombinationHeightTimeLocks
     );
   };
 
   getSize = () => {
-    return calculateByteLenForValue(this.index) + 1;
+    //21 for push and hash, 3 other opcodes
+    return 24;
   };
 
   toScript = () => {
-    return `${this.index} INPSECTINPUTVALUE`;
+    return `OP_DUP OP_HASH160 ${this.hash} OP_EQUALVERIFY`;
   };
 }

@@ -1,8 +1,9 @@
 import { lexKeyword } from "../../../lex-utils";
 import {
+  hasType,
   sanityCheck,
-  Types,
   TypeDescriptions,
+  Types,
 } from "../../../miniscript-types";
 import {
   MiniscriptFragment,
@@ -12,11 +13,11 @@ import {
   MiniscriptWrapper,
 } from "../../../types";
 
-export class WRAP_V
+export class WRAP_J
   extends MiniscriptFragmentStatic
   implements MiniscriptFragment, MiniscriptWrapper
 {
-  static tokenType = "WRAP_V";
+  static tokenType = "WRAP_J";
   children: MiniscriptFragment[];
   type: number;
 
@@ -29,7 +30,7 @@ export class WRAP_V
 
   static lex = (s: string, state: LexState): Token | undefined => {
     let position = state.cursor;
-    if (lexKeyword(s, "v", state)) {
+    if (lexKeyword(s, "j", state)) {
       return {
         tokenType: this.tokenType,
         position,
@@ -39,65 +40,59 @@ export class WRAP_V
 
   static parseWrapper = (parseContext: any) => {
     parseContext.eat(this.tokenType);
-
     let child = parseContext.parseWrappedExpression();
-    return new WRAP_V([child]);
+    return new WRAP_J([child]);
   };
 
   getSize = () => {
-    let firstChild = this.children[0];
-    let scriptSize = firstChild.getSize();
-
-    if (firstChild.getType() & Types.ExpensiveVerify) {
-      scriptSize += 1;
-    }
-
-    return scriptSize;
+    return this.children[0].getSize() + 4;
   };
 
   getType = () => {
     let type = 0;
-    let firstChildType = this.children[0].getType();
+    let firstChild = this.children[0];
 
-    // "V"_mst.If(x << "B"_mst) |
-    if (!(firstChildType & Types.BaseType)) {
-      let errorMessage = `${WRAP_V.tokenType} could not be constructed because it's first argument was not of type BASE.\n`;
-      errorMessage += `Please make sure the first argument is an expression that ${TypeDescriptions.BaseType}`;
+    // "B"_mst.If(x << "Bn"_mst) | // B=B_x*n_x
+    if (!hasType(firstChild.type, [Types.BaseType, Types.NonzeroArgProperty])) {
+      let errorMessage = `${WRAP_J.tokenType} could not be constructed because it's first argument was not of type BASE.\n`;
+      errorMessage += `Please make sure the first argument is an expression that consumes a non-zero stack argument and ${TypeDescriptions.BaseType}`;
       throw new Error(errorMessage);
     }
 
-    type |= Types.VerifyType;
+    type |= Types.BaseType;
 
-    // (x & "ghijk"_mst) |
+    // "e"_mst.If(x << "f"_mst) | // e=f_x
+    if (hasType(firstChild.type, [Types.ForcedProperty])) {
+      type |= Types.ExpressionProperty;
+    }
+
+    // (x & "ghijk"_mst) | // g=g_x, h=h_x, i=i_x, j=j_x, k=k_x
     type |=
-      firstChildType &
+      firstChild.type &
       (Types.ContainsRelativeTimeTimelock |
         Types.ContainsRelativeHeightTimelock |
         Types.ContainsTimeTimelock |
         Types.ContainsHeightTimelock |
         Types.NoCombinationHeightTimeLocks);
 
-    // (x & "zonms"_mst) |
+    // (x & "oums"_mst) | // o=o_x, u=u_x, m=m_x, s=s_x
     type |=
-      firstChildType &
-      (Types.ZeroArgProperty |
-        Types.OneArgProperty |
-        Types.NonzeroArgProperty |
+      firstChild.type &
+      (Types.OneArgProperty |
+        Types.UnitProperty |
         Types.NonmalleableProperty |
         Types.SafeProperty);
 
-    // "fx"_mst; // f, x
-    type |= Types.ForcedProperty | Types.ExpensiveVerify;
+    // "ndx"_mst; // n, d, x
+    type |=
+      Types.NonzeroArgProperty |
+      Types.DissatisfiableProperty |
+      Types.ExpensiveVerify;
+
     return type;
   };
 
   toScript = () => {
-    let firstChild = this.children[0];
-
-    if (firstChild.getType() & Types.ExpensiveVerify) {
-      return `${firstChild.toScript()} OP_VERIFY`;
-    }
-
-    return firstChild.toScript(true);
+    return `OP_SIZE OP_0NOTEQUAL OP_IF ${this.children[0].toScript()} OP_ENDIF`;
   };
 }

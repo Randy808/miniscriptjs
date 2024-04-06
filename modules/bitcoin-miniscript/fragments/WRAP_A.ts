@@ -1,22 +1,26 @@
 import { lexKeyword } from "../../../lex-utils";
-import { sanityCheck, TypeDescriptions, Types } from "../../../miniscript-types";
+import {
+  sanityCheck,
+  TypeDescriptions,
+  Types,
+} from "../../../miniscript-types";
 import {
   MiniscriptFragment,
   MiniscriptFragmentStatic,
-  MiniscriptWrapper,
   LexState,
   Token,
+  MiniscriptWrapper,
 } from "../../../types";
 
-export class WRAP_S
+export class WRAP_A
   extends MiniscriptFragmentStatic
   implements MiniscriptFragment, MiniscriptWrapper
 {
-  static tokenType = "WRAP_S";
-  children: any[];
+  static tokenType = "WRAP_A";
+  children: MiniscriptFragment[];
   type: number;
 
-  constructor(children: any[]) {
+  constructor(children: MiniscriptFragment[]) {
     super();
     this.children = children;
     this.type = this.getType();
@@ -25,7 +29,7 @@ export class WRAP_S
 
   static lex = (s: string, state: LexState): Token | undefined => {
     let position = state.cursor;
-    if (lexKeyword(s, "s", state)) {
+    if (lexKeyword(s, "a", state)) {
       return {
         tokenType: this.tokenType,
         position,
@@ -35,41 +39,37 @@ export class WRAP_S
 
   static parseWrapper = (parseContext: any) => {
     parseContext.eat(this.tokenType);
-
     let child = parseContext.parseWrappedExpression();
-    return new WRAP_S([child]);
+    return new WRAP_A([child]);
   };
 
   getSize = () => {
-    let firstChild = this.children[0];
-    return firstChild.getSize() + 1;
+    return this.children[0].getSize() + 2;
   };
 
   getType = () => {
     let type = 0;
     let firstChild = this.children[0];
 
-    // "W"_mst.If(x << "Bo"_mst) |
-    if (
-      (firstChild.getType() & (Types.BaseType | Types.OneArgProperty)) ===
-      (Types.BaseType | Types.OneArgProperty)
-    ) {
-      type |= Types.WrappedType;
-    } else {
-      let errorMessage = `${WRAP_S.tokenType} could not be constructed because it's first argument was not of type BASE.\n`;
-      errorMessage += `Please make sure the first argument is an expression that takes one argument and ${TypeDescriptions.BaseType}`;
+    //"W"_mst.If(x << "B"_mst) | // W=B_x
+    if (!(firstChild.type & Types.BaseType)) {
+      let errorMessage = `${WRAP_A.tokenType} could not be constructed because it's first argument was not of type BASE.\n`;
+      errorMessage += `Please make sure the first argument is an expression that ${TypeDescriptions.BaseType}`;
+      throw new Error(errorMessage);
     }
 
-    // (x & "ghijk"_mst) |
+    type |= Types.WrappedType;
+
+    //(x & "ghijk"_mst) | // g=g_x, h=h_x, i=i_x, j=j_x, k=k_x
     type |=
-      firstChild.getType() &
+      firstChild.type &
       (Types.ContainsRelativeTimeTimelock |
         Types.ContainsRelativeHeightTimelock |
         Types.ContainsTimeTimelock |
         Types.ContainsHeightTimelock |
         Types.NoCombinationHeightTimeLocks);
 
-    // (x & "udfemsx"_mst);
+    //(x & "udfems"_mst) | // u=u_x, d=d_x, f=f_x, e=e_x, m=m_x, s=s_x
     type |=
       firstChild.getType() &
       (Types.UnitProperty |
@@ -77,14 +77,15 @@ export class WRAP_S
         Types.ForcedProperty |
         Types.ExpressionProperty |
         Types.NonmalleableProperty |
-        Types.SafeProperty |
-        Types.ExpensiveVerify);
+        Types.SafeProperty);
+
+    //"x"_mst; // x
+    type |= Types.ExpensiveVerify;
 
     return type;
   };
 
   toScript = () => {
-    let firstChild = this.children[0];
-    return `OP_SWAP ${firstChild.toScript()}`;
+    return `TOALTSTACK ${this.children[0].toScript()} FROMALTSTACK`;
   };
 }

@@ -25,6 +25,8 @@ let TypeDescriptions = {
   BaseType:
     "takes inputs from the top of the stack and pushes a nonzero value of up to 4 bytes on satisfaction, or an exact 0 on dissatisfaction.",
   VerifyType: "leaves nothing on the stack.",
+  WrappedType:
+    "takes input from one below the top of the stack and pushes a non-zero on top (or one below the top) of the stack on satisfaction, or an exact 0 on dissatisfaction.",
 };
 
 function sanityCheck(type: number) {
@@ -110,4 +112,9 @@ function sanityCheck(type: number) {
   return type;
 }
 
-export { Types, TypeDescriptions, sanityCheck };
+function hasType(typeToCheck: number, types: number[]) {
+  let combinedTypes = types.reduce((acc, c) => acc | c, 0);
+  return (typeToCheck & combinedTypes) == combinedTypes;
+}
+
+export { Types, TypeDescriptions, sanityCheck, hasType };

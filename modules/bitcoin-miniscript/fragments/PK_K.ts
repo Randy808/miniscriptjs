@@ -1,4 +1,4 @@
-import { OPEN_PAREN, CLOSE_PAREN } from "../../../universal-tokens";
+import { OPEN_PAREN, CLOSE_PAREN, STRING } from "../../../universal-tokens";
 import { lexKeyword } from "../../../lex-utils";
 import { Types } from "../../../miniscript-types";
 import {
@@ -18,17 +18,19 @@ export class PK_K
   value: any;
   children: any[];
   isTaproot: boolean;
+  type: number;
 
-  constructor(v: any) {
+  constructor(v: any, isTaproot: boolean = false) {
     super();
     this.children = [];
     this.value = v;
-    this.isTaproot = false;
+    this.isTaproot = isTaproot;
+    this.type = this.getType();
   }
 
   static lex = (s: string, state: LexState): Token | undefined => {
     let position = state.cursor;
-    if (lexKeyword(s, "pk_k", state)) {
+    if (lexKeyword(s, "pk_k(", state)) {
       return {
         tokenType: this.tokenType,
         position,
@@ -38,8 +40,7 @@ export class PK_K
 
   static parse = (parseContext: ParseContext) => {
     parseContext.eat(this.tokenType);
-    parseContext.eat(OPEN_PAREN.tokenType);
-    let key = parseContext.eat(KEY.tokenType);
+    let key = parseContext.eat(STRING.tokenType);
     parseContext.eat(CLOSE_PAREN.tokenType);
     return new PK_K(key?.value);
   };

@@ -1,5 +1,5 @@
 import { lexKeyword } from "../../../lex-utils";
-import { Types } from "../../../miniscript-types";
+import { sanityCheck, Types } from "../../../miniscript-types";
 import {
   MiniscriptFragment,
   MiniscriptWrapper,
@@ -9,6 +9,7 @@ import {
 } from "../../../types";
 import { PK_K } from "./PK_K";
 
+//TODO: Break out PK into separate class
 export class WRAP_C
   extends MiniscriptFragmentStatic
   implements MiniscriptFragment, MiniscriptWrapper
@@ -16,16 +17,19 @@ export class WRAP_C
   static tokenType = "WRAP_C";
   children: any[];
   wrapper: boolean;
+  type: number;
 
   constructor(children: any[]) {
     super();
     this.children = children;
     this.wrapper = false;
+    this.type = this.getType();
+    sanityCheck(this.type);
   }
 
   static lex = (s: string, state: LexState): Token | undefined => {
     let position = state.cursor;
-    if (lexKeyword(s, "pk", state)) {
+    if (lexKeyword(s, "pk(", state)) {
       return {
         tokenType: WRAP_C.tokenType,
         position,

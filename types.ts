@@ -6,6 +6,7 @@ export interface MiniscriptModule {
 }
 
 export interface MiniscriptFragment {
+  type: number;
   getSize: () => number;
   getType: () => number;
   toScript: (verify?: boolean) => string;

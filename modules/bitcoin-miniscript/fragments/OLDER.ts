@@ -1,6 +1,6 @@
 import { CLOSE_PAREN, NUMBER } from "../../../universal-tokens";
 import { lexKeyword } from "../../../lex-utils";
-import { Types } from "../../../miniscript-types";
+import { sanityCheck, Types } from "../../../miniscript-types";
 import {
   LexState,
   MiniscriptFragment,
@@ -24,6 +24,7 @@ export class OLDER
     this.children = [];
     this.k = k;
     this.type = this.getType();
+    sanityCheck(this.type);
   }
 
   static lex = (s: string, state: LexState): Token | undefined => {
@@ -38,6 +39,7 @@ export class OLDER
 
   static parse = (parseContext: ParseContext) => {
     parseContext.eat(this.tokenType);
+
     let seqNum = parseContext.eat(NUMBER.tokenType)?.value;
 
     if (isNaN(seqNum)) {

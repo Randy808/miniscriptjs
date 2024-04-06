@@ -1,34 +1,28 @@
-import { COMMA, CLOSE_PAREN, NUMBER } from "../../../universal-tokens";
 import { lexKeyword } from "../../../lex-utils";
-
-import { sanityCheck, Types } from "../../../miniscript-types";
+import { Types } from "../../../miniscript-types";
 import {
-  MiniscriptFragment,
   LexState,
-  Token,
+  MiniscriptFragment,
   MiniscriptFragmentStatic,
+  Token,
 } from "../../../types";
 import { ParseContext } from "../../../parser";
-import { calculateByteLenForValue } from "../../../utils";
 
-export class INP_VALUE
+export class JUST_1
   extends MiniscriptFragmentStatic
   implements MiniscriptFragment
 {
-  static tokenType = "INP_VALUE";
-  index: number;
+  static tokenType = "JUST_1";
   type: number;
 
-  constructor(index: number) {
+  constructor() {
     super();
-    this.index = index;
     this.type = this.getType();
-    sanityCheck(this.type);
   }
 
   static lex = (s: string, state: LexState): Token | undefined => {
     let position = state.cursor;
-    if (lexKeyword(s, "inp_value(", state)) {
+    if (s[state.cursor] == "1" && isNaN(parseInt(s[state.cursor + 1]))) {
       return {
         tokenType: this.tokenType,
         position,
@@ -38,15 +32,14 @@ export class INP_VALUE
 
   static parse = (parseContext: ParseContext) => {
     parseContext.eat(this.tokenType);
-    let inputIndex = parseContext.eat(NUMBER.tokenType)?.value;
-    parseContext.eat(CLOSE_PAREN.tokenType);
-    return new INP_VALUE(inputIndex);
+    return new JUST_1();
   };
 
   getType = () => {
     return (
       Types.BaseType |
       Types.ZeroArgProperty |
+      Types.UnitProperty |
       Types.ForcedProperty |
       Types.NonmalleableProperty |
       Types.ExpensiveVerify |
@@ -55,10 +48,10 @@ export class INP_VALUE
   };
 
   getSize = () => {
-    return calculateByteLenForValue(this.index) + 1;
+    return 1;
   };
 
   toScript = () => {
-    return `${this.index} INPSECTINPUTVALUE`;
+    return `1`;
   };
 }

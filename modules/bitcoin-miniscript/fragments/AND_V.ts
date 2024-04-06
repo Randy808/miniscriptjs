@@ -1,6 +1,6 @@
 import { COMMA, CLOSE_PAREN } from "../../../universal-tokens";
 import { lexKeyword } from "../../../lex-utils";
-import { TypeDescriptions, Types } from "../../../miniscript-types";
+import { sanityCheck, TypeDescriptions, Types } from "../../../miniscript-types";
 import {
   MiniscriptFragment,
   MiniscriptFragmentStatic,
@@ -9,13 +9,19 @@ import {
 } from "../../../types";
 import { ParseContext } from "../../../parser";
 
-export class AND_V extends MiniscriptFragmentStatic {
+export class AND_V
+  extends MiniscriptFragmentStatic
+  implements MiniscriptFragment
+{
   static tokenType = "AND_V";
   children: MiniscriptFragment[];
+  type: number;
 
   constructor(children: MiniscriptFragment[]) {
     super();
     this.children = children;
+    this.type = this.getType();
+    sanityCheck(this.type);
   }
 
   static lex = (s: string, state: LexState): Token | undefined => {

@@ -1,6 +1,6 @@
 import { COMMA, CLOSE_PAREN, NUMBER } from "../../../universal-tokens";
 import { lexKeyword } from "../../../lex-utils";
-import { Types } from "../../../miniscript-types";
+import { sanityCheck, Types } from "../../../miniscript-types";
 import {
   LexState,
   MiniscriptFragment,
@@ -26,6 +26,7 @@ export class THRESH
     this.children = children;
     this.k = k;
     this.type = this.getType();
+    sanityCheck(this.type);
   }
 
   getType = () => {
@@ -76,9 +77,9 @@ export class THRESH
 
       if (!(childType & Types.UnitProperty)) {
         throw new Error(
-          `${this} could not be constructed: argument ${
+          `${THRESH.tokenType} could not be constructed: argument ${
             i + 1
-          } must hve the unit property`
+          } must have the unit property`
         );
       }
 

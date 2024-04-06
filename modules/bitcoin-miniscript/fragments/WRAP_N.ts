@@ -1,22 +1,26 @@
 import { lexKeyword } from "../../../lex-utils";
-import { sanityCheck, TypeDescriptions, Types } from "../../../miniscript-types";
+import {
+  sanityCheck,
+  Types,
+  TypeDescriptions,
+} from "../../../miniscript-types";
 import {
   MiniscriptFragment,
   MiniscriptFragmentStatic,
-  MiniscriptWrapper,
   LexState,
   Token,
+  MiniscriptWrapper,
 } from "../../../types";
 
-export class WRAP_S
+export class WRAP_N
   extends MiniscriptFragmentStatic
   implements MiniscriptFragment, MiniscriptWrapper
 {
-  static tokenType = "WRAP_S";
-  children: any[];
+  static tokenType = "WRAP_N";
+  children: MiniscriptFragment[];
   type: number;
 
-  constructor(children: any[]) {
+  constructor(children: MiniscriptFragment[]) {
     super();
     this.children = children;
     this.type = this.getType();
@@ -25,7 +29,7 @@ export class WRAP_S
 
   static lex = (s: string, state: LexState): Token | undefined => {
     let position = state.cursor;
-    if (lexKeyword(s, "s", state)) {
+    if (lexKeyword(s, "n", state)) {
       return {
         tokenType: this.tokenType,
         position,
@@ -37,54 +41,44 @@ export class WRAP_S
     parseContext.eat(this.tokenType);
 
     let child = parseContext.parseWrappedExpression();
-    return new WRAP_S([child]);
+    return new WRAP_N([child]);
   };
 
   getSize = () => {
-    let firstChild = this.children[0];
-    return firstChild.getSize() + 1;
+    return this.children[0].getSize() + 1;
   };
 
   getType = () => {
     let type = 0;
     let firstChild = this.children[0];
-
-    // "W"_mst.If(x << "Bo"_mst) |
-    if (
-      (firstChild.getType() & (Types.BaseType | Types.OneArgProperty)) ===
-      (Types.BaseType | Types.OneArgProperty)
-    ) {
-      type |= Types.WrappedType;
-    } else {
-      let errorMessage = `${WRAP_S.tokenType} could not be constructed because it's first argument was not of type BASE.\n`;
-      errorMessage += `Please make sure the first argument is an expression that takes one argument and ${TypeDescriptions.BaseType}`;
-    }
-
     // (x & "ghijk"_mst) |
     type |=
-      firstChild.getType() &
+      firstChild.type &
       (Types.ContainsRelativeTimeTimelock |
         Types.ContainsRelativeHeightTimelock |
         Types.ContainsTimeTimelock |
         Types.ContainsHeightTimelock |
         Types.NoCombinationHeightTimeLocks);
 
-    // (x & "udfemsx"_mst);
+    // (x & "Bzondfems"_mst) |
     type |=
-      firstChild.getType() &
-      (Types.UnitProperty |
+      firstChild.type &
+      (Types.BaseType |
+        Types.ZeroArgProperty |
+        Types.OneArgProperty |
+        Types.NonzeroArgProperty |
         Types.DissatisfiableProperty |
         Types.ForcedProperty |
         Types.ExpressionProperty |
         Types.NonmalleableProperty |
-        Types.SafeProperty |
-        Types.ExpensiveVerify);
+        Types.SafeProperty);
 
+    // "ux"_mst;
+    type |= Types.UnitProperty | Types.ExpensiveVerify;
     return type;
   };
 
   toScript = () => {
-    let firstChild = this.children[0];
-    return `OP_SWAP ${firstChild.toScript()}`;
+    return `${this.children[0].toScript()} OP_0NOTEQUAL`;
   };
 }

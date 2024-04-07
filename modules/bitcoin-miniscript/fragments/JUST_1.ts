@@ -22,7 +22,7 @@ export class JUST_1
 
   static lex = (s: string, state: LexState): Token | undefined => {
     let position = state.cursor;
-    if (s[state.cursor] == "1" && isNaN(parseInt(s[state.cursor + 1]))) {
+    if (isNaN(parseInt(s[state.cursor + 1])) && lexKeyword(s, "1", state)) {
       return {
         tokenType: this.tokenType,
         position,

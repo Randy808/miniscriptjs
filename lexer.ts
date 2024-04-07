@@ -31,7 +31,6 @@ export default class Lexer {
     this.wrapperTokens = wrappers as TokenClass[];
   }
 
-  //TODO: Cleanup
   lex(miniscriptString: string) {
     let tokens: Token[] = [];
 
@@ -40,55 +39,62 @@ export default class Lexer {
     };
 
     while (lexState.cursor != miniscriptString.length) {
-      let node: Token | undefined = undefined;
-
-      let colonIndex = 0;
-
-      for (let i = lexState.cursor; i < miniscriptString.length; i++) {
-        if (miniscriptString[i] == ":") {
-          colonIndex = i;
-          break;
-        }
-        if (miniscriptString[i] < "a" || miniscriptString[i] > "z") break;
-      }
-
-      for (let i = lexState.cursor; i < colonIndex; i++) {
-        for (let tokenClass of this.wrapperTokens) {
-          node = tokenClass.lex(miniscriptString, lexState);
-          if (node) {
-            tokens.push(node);
-            break;
-          }
-        }
-
-        if (node == undefined) {
-          let errorDescription = `Invalid wrapper token found at position ${lexState.cursor}: `;
-          let errorMessage = `\n${errorDescription}${miniscriptString.substring(
-            lexState.cursor
-          )}\n`;
-          errorMessage += `${" ".repeat(errorDescription.length)}~`;
-          throw new Error(errorMessage);
-        }
-      }
-
-      for (let tokenClass of this.tokenClasses) {
-        node = tokenClass.lex(miniscriptString, lexState);
-        if (node) {
-          tokens.push(node);
-          break;
-        }
-      }
-
-      if (node == undefined) {
-        let errorDescription = `Invalid token found at position ${lexState.cursor}: `;
-        let errorMessage = `\n${errorDescription}${miniscriptString.substring(
-          lexState.cursor
-        )}\n`;
-        errorMessage += `${" ".repeat(errorDescription.length)}~`;
-        throw new Error(errorMessage);
-      }
+      tokens.push(...this.parseWrappers(lexState, miniscriptString));
+      tokens.push(
+        this.parseToken(miniscriptString, lexState, this.tokenClasses)
+      );
     }
 
     return tokens;
+  }
+
+  private parseWrappers(lexState: LexState, miniscriptString: string) {
+    let colonIndex = 0;
+    let tokens: Token[] = [];
+
+    for (let i = lexState.cursor; i < miniscriptString.length; i++) {
+      if (miniscriptString[i] == ":") {
+        colonIndex = i;
+        break;
+      }
+      if (miniscriptString[i] < "a" || miniscriptString[i] > "z") break;
+    }
+
+    if (!colonIndex) {
+      return [];
+    }
+
+    for (let i = lexState.cursor; i < colonIndex; i++) {
+      tokens.push(
+        this.parseToken(miniscriptString, lexState, this.wrapperTokens)
+      );
+    }
+
+    return tokens;
+  }
+
+  private parseToken(
+    miniscriptString: string,
+    lexState: LexState,
+    tokenClasses: TokenClass[]
+  ): Token {
+    let token: Token | undefined;
+    for (let tokenClass of tokenClasses) {
+      token = tokenClass.lex(miniscriptString, lexState);
+      if (token) {
+        return token;
+      }
+    }
+
+    throw this.lexError(miniscriptString, lexState.cursor);
+  }
+
+  private lexError(miniscriptString: string, cursor: number) {
+    let errorDescription = `Invalid token found at position ${cursor}: `;
+    let errorMessage = `\n${errorDescription}${miniscriptString.substring(
+      cursor
+    )}\n`;
+    errorMessage += `${" ".repeat(errorDescription.length)}~`;
+    return new Error(errorMessage);
   }
 }

@@ -1,4 +1,4 @@
-import { CLOSE_PAREN, COMMA, NUMBER } from "../../../universal-tokens";
+import { CLOSE_PAREN, COMMA, NUMBER, STRING } from "../../../universal-tokens";
 import { lexKeyword } from "../../../lex-utils";
 import { sanityCheck, Types } from "../../../miniscript-types";
 import {
@@ -8,7 +8,6 @@ import {
   Token,
 } from "../../../types";
 import { ParseContext } from "../../../parser";
-import { KEY } from "./KEY";
 import { PK_K } from "./PK_K";
 
 export class MULTI
@@ -45,7 +44,8 @@ export class MULTI
 
     while (parseContext.peekToken().tokenType != CLOSE_PAREN.tokenType) {
       parseContext.eat(COMMA.tokenType);
-      let key = parseContext.eat(KEY.tokenType);
+      //TODO: Add key validation with key validator passed into parser
+      let key = parseContext.eat(STRING.tokenType);
       // multi can only be used on pre-taproot keys
       children.push(new PK_K(key?.value, false));
     }

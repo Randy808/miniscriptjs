@@ -7,7 +7,6 @@ import { HASH160 } from "./fragments/HASH160";
 import { HASH256 } from "./fragments/HASH256";
 import { JUST_0 } from "./fragments/JUST_0";
 import { JUST_1 } from "./fragments/JUST_1";
-import { KEY } from "./fragments/KEY";
 import { MULTI } from "./fragments/MULTI";
 import { OLDER } from "./fragments/OLDER";
 import { OR_B } from "./fragments/OR_B";
@@ -52,12 +51,6 @@ export default {
     AND_V,
     HASH160,
     HASH256,
-    //TODO: Change key lexing to not look for strings starting with 0
-    //TODO: Also update lexNumber; it has related logic
-    //Must come before JUST_0 because of temporary lex rules
-    KEY,
-    JUST_0,
-    JUST_1,
     MULTI,
     OLDER,
     OR_B,

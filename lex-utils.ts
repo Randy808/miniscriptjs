@@ -11,16 +11,18 @@ export function lexKeyword(s: string, search: string, state: LexState) {
 }
 
 export function lexNumber(s: string, state: LexState) {
-  //If it's a key
-  if (s[state.cursor] == "0") {
-    return;
-  }
+  let firstNum = s[state.cursor];
 
   let num = "";
 
   while (!isNaN(parseInt(s[state.cursor]))) {
     num += s[state.cursor];
     state.cursor++;
+  }
+
+  //Number should only start with 0 if it's 0
+  if (firstNum == "0" && parseInt(num) != 0) {
+    throw new Error("Please remove any leading 0s");
   }
 
   return parseInt(num);

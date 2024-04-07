@@ -8,7 +8,6 @@ import {
   Token,
 } from "../../../types";
 import { ParseContext } from "../../../parser";
-import { KEY } from "./KEY";
 
 export class PK_K
   extends MiniscriptFragmentStatic

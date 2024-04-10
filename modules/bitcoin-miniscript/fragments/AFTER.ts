@@ -1,6 +1,4 @@
-import {
-  NUMBER,
-} from "../../../universal-tokens";
+import { NUMBER } from "../../../universal-tokens";
 import { lexKeyword } from "../../../lex-utils";
 import { Types } from "../../../miniscript-types";
 import {
@@ -41,9 +39,7 @@ export class AFTER
 
     let locktime = NUMBER.parse(parseContext);
 
-    if (locktime < 1 || locktime >= 0x80000000) {
-      throw new Error("Locktime invalid");
-    }
+    this.validateLocktime(locktime);
 
     return new AFTER(locktime);
   };
@@ -78,6 +74,23 @@ export class AFTER
   };
 
   toScript = () => {
-    return `${this.locktime} CHECKLOCKTIMEVERIFY`;
+    return `${this.locktime} OP_CHECKLOCKTIMEVERIFY`;
   };
+
+  static fromScript = (opcodes: string[]) => {
+    let locktime = parseInt(opcodes[1]);
+    if (isNaN(locktime)) {
+      return;
+    }
+
+    if (opcodes[0] == "OP_CHECKLOCKTIMEVERIFY") {
+      return new AFTER(locktime);
+    }
+  };
+
+  private static validateLocktime(locktime: number) {
+    if (locktime < 1 || locktime >= 0x80000000) {
+      throw new Error("Locktime invalid");
+    }
+  }
 }

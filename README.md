@@ -13,15 +13,15 @@ console.log(rootExpression.toScript());
 
 More examples can be found [here](/examples)
 
-## About miniscript
+## About Miniscript
 
-Miniscript is a language designed by Pieter Wuille, Andrew Poelstra, and Sanket Kanjalkar. It enhances the simplicity, composability, and verifiability of Bitcoin script creation. The essence of Miniscript lies in its ability to facilitate semantic reasoning about script correctness, minimize script malleability, and promote composability.
+Miniscript is a language designed by Pieter Wuille, Andrew Poelstra, and Sanket Kanjalkar. It enhances the simplicity, composability, and verifiability of Bitcoin Script creation. The essence of Miniscript lies in its ability to facilitate semantic reasoning about script correctness, minimize script malleability, and promote composability.
 
-One of Miniscript's core strengths is its bidirectional compatibility with Bitcoin script: every Miniscript expression can be directly compiled to a Bitcoin script, and vice versa, allowing for seamless interchangeability between the two.
+One of Miniscript's core strengths is its bidirectional compatibility with Bitcoin Script: every Miniscript expression can be directly compiled to a Bitcoin Script, and vice versa, allowing for seamless interchangeability between the two.
 
 ## Policy Language
 
-Miniscript also introduces a policy language that simplifies scripting by abstracting common patterns into more straightforward expressions. For instance, specific operations like 'and_v' and 'and_b' are consolidated into a single 'and' operation in the policy language, making scripts more accessible and less error-prone to write. It also adds a syntax for encoding probabilities into subexpressions for which it accordingly picks the best miniscript representation of. Currently, MiniscriptJS does not support the policy language, but future updates may include this feature.
+Miniscript also introduces a policy language that simplifies scripting by abstracting common patterns into more straightforward expressions. For instance, specific operations like 'and_v' and 'and_b' are consolidated into a single 'and' operation in the policy language, making scripts more accessible and less error-prone to write. It also adds a syntax for encoding probabilities into subexpressions for which it accordingly picks the best Miniscript representation of. Currently, MiniscriptJS does not support the policy language, but future updates may include this feature.
 
 ## Contributing
 

@@ -1,5 +1,5 @@
-import BitcoinMiniscript from "./modules/bitcoin-miniscript";
-import ElementsMiniscript from "./modules/elements-miniscript";
+import BitcoinMiniscript from "./miniscript-modules/bitcoin-miniscript";
+import ElementsMiniscript from "./miniscript-modules/elements-miniscript";
 
 import { MiniscriptFragment, MiniscriptModule } from "./types";
 import { MiniscriptParser } from "./parse/parser";

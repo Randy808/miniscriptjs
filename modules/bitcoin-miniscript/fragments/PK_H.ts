@@ -7,7 +7,7 @@ import {
   MiniscriptFragmentStatic,
   Token,
 } from "../../../types";
-import { ParseContext } from "../../../parse/parser";
+import { MiniscriptParseContext } from "../../../parse/parser";
 
 export class PK_H
   extends MiniscriptFragmentStatic
@@ -33,7 +33,7 @@ export class PK_H
     }
   };
 
-  static parse = (parseContext: ParseContext) => {
+  static parse = (parseContext:MiniscriptParseContext) => {
     parseContext.eat(this.tokenType);
     let hash = parseContext.eat(STRING.tokenType);
     parseContext.eat(CLOSE_PAREN.tokenType);

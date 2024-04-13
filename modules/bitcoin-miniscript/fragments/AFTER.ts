@@ -7,7 +7,7 @@ import {
   MiniscriptFragmentStatic,
   Token,
 } from "../../../types";
-import { ParseContext } from "../../../parse/parser";
+import { MiniscriptParseContext } from "../../../parse/parser";
 import { calculateByteLenForValue } from "../../../utils";
 
 export class AFTER
@@ -34,7 +34,7 @@ export class AFTER
     }
   };
 
-  static parse = (parseContext: ParseContext) => {
+  static parse = (parseContext:MiniscriptParseContext) => {
     parseContext.eat(this.tokenType);
 
     let locktime = parseContext.eat(NUMBER.tokenType)?.value;

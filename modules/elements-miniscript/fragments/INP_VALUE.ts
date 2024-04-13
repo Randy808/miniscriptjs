@@ -8,7 +8,7 @@ import {
   Token,
   MiniscriptFragmentStatic,
 } from "../../../types";
-import { ParseContext } from "../../../parse/parser";
+import { MiniscriptParseContext } from "../../../parse/parser";
 import { calculateByteLenForValue } from "../../../utils";
 
 export class INP_VALUE
@@ -36,7 +36,7 @@ export class INP_VALUE
     }
   };
 
-  static parse = (parseContext: ParseContext) => {
+  static parse = (parseContext:MiniscriptParseContext) => {
     parseContext.eat(this.tokenType);
     let inputIndex = parseContext.eat(NUMBER.tokenType)?.value;
     parseContext.eat(CLOSE_PAREN.tokenType);

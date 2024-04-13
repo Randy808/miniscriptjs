@@ -12,7 +12,7 @@ import {
   LexState,
   Token,
 } from "../../../types";
-import { ParseContext } from "../../../parse/parser";
+import { MiniscriptParseContext } from "../../../parse/parser";
 
 export class OR_B
   extends MiniscriptFragmentStatic
@@ -39,7 +39,7 @@ export class OR_B
     }
   };
 
-  static parse = (parseContext: ParseContext) => {
+  static parse = (parseContext:MiniscriptParseContext) => {
     parseContext.eat(this.tokenType);
 
     let firstChild = parseContext.parseWrappedExpression();

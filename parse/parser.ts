@@ -1,7 +1,7 @@
 import { COLON } from "../lex/universal-tokens";
 import { matchToken } from "./parse-utils";
 
-export class Parser {
+export class MiniscriptParser {
   expressions: any[];
   wrappers: any;
   parseContext: any;
@@ -12,7 +12,7 @@ export class Parser {
   }
 
   parse = (tokens: any[]) => {
-    this.parseContext = new ParseContext(
+    this.parseContext = new MiniscriptParseContext(
       tokens,
       this.parseExpression,
       this.parseWrappedExpression
@@ -75,7 +75,7 @@ export class Parser {
   };
 }
 
-export class ParseContext {
+export class MiniscriptParseContext {
   parseExpression: any;
   parseWrappedExpression: any;
   tokens: any;

@@ -1,10 +1,10 @@
 import { AFTER } from "../modules/bitcoin-miniscript/fragments/AFTER";
-import { Parser } from "../parser";
+import { MiniscriptParser } from "../parse/parser";
 import BitcoinMiniscript from "../modules/bitcoin-miniscript";
 
 test("AFTER can decode Script", () => {
   let script = "4 OP_CHECKLOCKTIMEVERIFY";
-  let parser = new Parser(
+  let parser = new MiniscriptParser(
     BitcoinMiniscript.expressions,
     BitcoinMiniscript.wrappers
   );

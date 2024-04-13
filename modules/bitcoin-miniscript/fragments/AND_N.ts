@@ -12,7 +12,7 @@ import {
   LexState,
   Token,
 } from "../../../types";
-import { ParseContext } from "../../../parse/parser";
+import { MiniscriptParseContext } from "../../../parse/parser";
 import { JUST_0 } from "./JUST_0";
 import { ANDOR } from "./ANDOR";
 
@@ -41,7 +41,7 @@ export class AND_N
     }
   };
 
-  static parse = (parseContext: ParseContext) => {
+  static parse = (parseContext:MiniscriptParseContext) => {
     parseContext.eat(this.tokenType);
 
     let firstChild = parseContext.parseWrappedExpression();

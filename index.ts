@@ -2,7 +2,7 @@ import BitcoinMiniscript from "./modules/bitcoin-miniscript";
 import ElementsMiniscript from "./modules/elements-miniscript";
 
 import { MiniscriptFragment, MiniscriptModule } from "./types";
-import { Parser } from "./parse/parser";
+import { MiniscriptParser } from "./parse/parser";
 import Lexer from "./lex/lexer";
 
 let miniscriptModules: MiniscriptModule[] = [BitcoinMiniscript];
@@ -25,14 +25,14 @@ export default class Miniscript {
     let lexer = new Lexer(wrappers, expressions);
     let tokens = lexer.lex(input);
 
-    let parser = new Parser(expressions, wrappers);
+    let parser = new MiniscriptParser(expressions, wrappers);
     return parser.parse(tokens);
   }
 
   static parseScript(
     input: string,
   ): any {
-    let parser = new Parser(expressions, wrappers);
+    let parser = new MiniscriptParser(expressions, wrappers);
     let reversedScript = input.split(" ").reverse();
     return parser.parseScript(reversedScript);
   }

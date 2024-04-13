@@ -1,7 +1,7 @@
 import { lexKeyword } from "../../../lex/lex-utils";
 import { Types } from "../../../miniscript-types";
 import { eat } from "../../../parse/parse-utils";
-import { ParseContext } from "../../../parse/parser";
+import { MiniscriptParseContext } from "../../../parse/parser";
 import {
   MiniscriptFragmentStatic,
   MiniscriptFragment,
@@ -47,7 +47,7 @@ export class HASH160
     }
   };
 
-  static parse = (parseContext: ParseContext) => {
+  static parse = (parseContext:MiniscriptParseContext) => {
     parseContext.eat(this.tokenType);
 
     parseContext.eat(OPEN_PAREN.tokenType);

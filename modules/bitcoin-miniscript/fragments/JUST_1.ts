@@ -6,7 +6,7 @@ import {
   MiniscriptFragmentStatic,
   Token,
 } from "../../../types";
-import { ParseContext } from "../../../parse/parser";
+import { MiniscriptParseContext } from "../../../parse/parser";
 
 export class JUST_1
   extends MiniscriptFragmentStatic
@@ -30,7 +30,7 @@ export class JUST_1
     }
   };
 
-  static parse = (parseContext: ParseContext) => {
+  static parse = (parseContext:MiniscriptParseContext) => {
     parseContext.eat(this.tokenType);
     return new JUST_1();
   };

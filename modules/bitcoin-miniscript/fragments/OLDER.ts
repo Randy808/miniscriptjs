@@ -8,7 +8,7 @@ import {
   Token,
 } from "../../../types";
 import { calculateByteLenForValue } from "../../../utils";
-import { ParseContext } from "../../../parse/parser";
+import { MiniscriptParseContext } from "../../../parse/parser";
 
 export class OLDER
   extends MiniscriptFragmentStatic
@@ -37,7 +37,7 @@ export class OLDER
     }
   };
 
-  static parse = (parseContext: ParseContext) => {
+  static parse = (parseContext:MiniscriptParseContext) => {
     parseContext.eat(this.tokenType);
 
     let seqNum = parseContext.eat(NUMBER.tokenType)?.value;

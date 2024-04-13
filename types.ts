@@ -1,4 +1,4 @@
-import { ParseContext } from "./parse/parser";
+import { MiniscriptParseContext } from "./parse/parser";
 
 export interface MiniscriptModule {
   wrappers: any[],
@@ -43,7 +43,7 @@ export type TokenClass = {
 export abstract class MiniscriptFragmentStatic {
   static tokenType: string;
   static lex: (s: string, state: LexState) => Token | undefined;
-  static parse(parseContext: ParseContext): MiniscriptFragment {
+  static parse(parseContext: MiniscriptParseContext): MiniscriptFragment {
     throw new Error(`Parse not implemented for token ${this.tokenType}`);
   }
 }

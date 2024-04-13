@@ -11,7 +11,7 @@ import {
   LexState,
   Token,
 } from "../../../types";
-import { ParseContext } from "../../../parse/parser";
+import { MiniscriptParseContext } from "../../../parse/parser";
 import { JUST_0 } from "./JUST_0";
 import { OR_I } from "./OR_I";
 

@@ -12,7 +12,7 @@ import {
   LexState,
   Token,
 } from "../../../types";
-import { ParseContext } from "../../../parse/parser";
+import { MiniscriptParseContext } from "../../../parse/parser";
 import { indent } from "../../../utils";
 
 export class OR_C
@@ -40,7 +40,7 @@ export class OR_C
     }
   };
 
-  static parse = (parseContext: ParseContext) => {
+  static parse = (parseContext:MiniscriptParseContext) => {
     parseContext.eat(this.tokenType);
 
     let firstChild = parseContext.parseWrappedExpression();

@@ -7,7 +7,7 @@ import {
   MiniscriptFragmentStatic,
   Token,
 } from "../../../types";
-import { ParseContext } from "../../../parse/parser";
+import { MiniscriptParseContext } from "../../../parse/parser";
 import { PK_K } from "./PK_K";
 
 export class MULTI
@@ -37,7 +37,7 @@ export class MULTI
     }
   };
 
-  static parse = (parseContext: ParseContext) => {
+  static parse = (parseContext:MiniscriptParseContext) => {
     parseContext.eat(this.tokenType);
     let k = parseContext.eat(NUMBER.tokenType)?.value;
     let children: MiniscriptFragment[] = [];

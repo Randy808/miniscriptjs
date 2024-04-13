@@ -8,7 +8,7 @@ import {
   Token,
 } from "../../../types";
 import { calculateByteLenForValue } from "../../../utils";
-import { ParseContext } from "../../../parse/parser";
+import { MiniscriptParseContext } from "../../../parse/parser";
 
 export class THRESH
   extends MiniscriptFragmentStatic
@@ -171,7 +171,7 @@ export class THRESH
     }
   };
 
-  static parse = (parseContext: ParseContext) => {
+  static parse = (parseContext:MiniscriptParseContext) => {
     parseContext.eat(this.tokenType);
     let k = parseContext.eat(NUMBER.tokenType)?.value;
 

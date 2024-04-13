@@ -1,4 +1,4 @@
-import { LexState } from "./types";
+import { LexState } from "../types";
 
 export function lexKeyword(s: string, search: string, state: LexState) {
   let index = s.indexOf(search, state.cursor);

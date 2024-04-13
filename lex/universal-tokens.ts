@@ -1,6 +1,6 @@
 import { lexKeyword, lexNumber, lexString } from "./lex-utils";
-import { eat } from "./parse-utils";
-import { LexState, Token } from "./types";
+import { eat } from "../parse/parse-utils";
+import { LexState, Token } from "../types";
 
 export class OPEN_PAREN {
   static tokenType = "OPEN_PAREN";

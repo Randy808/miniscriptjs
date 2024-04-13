@@ -1,5 +1,5 @@
-import { CLOSE_PAREN, COMMA, NUMBER, STRING } from "../../../universal-tokens";
-import { lexKeyword } from "../../../lex-utils";
+import { CLOSE_PAREN, COMMA, NUMBER, STRING } from "../../../lex/universal-tokens";
+import { lexKeyword } from "../../../lex/lex-utils";
 import { sanityCheck, Types } from "../../../miniscript-types";
 import {
   LexState,
@@ -7,7 +7,7 @@ import {
   MiniscriptFragmentStatic,
   Token,
 } from "../../../types";
-import { ParseContext } from "../../../parser";
+import { ParseContext } from "../../../parse/parser";
 import { PK_K } from "./PK_K";
 
 export class MULTI

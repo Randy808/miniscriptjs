@@ -2,8 +2,8 @@ import BitcoinMiniscript from "./modules/bitcoin-miniscript";
 import ElementsMiniscript from "./modules/elements-miniscript";
 
 import { MiniscriptFragment, MiniscriptModule } from "./types";
-import { Parser } from "./parser";
-import Lexer from "./lexer";
+import { Parser } from "./parse/parser";
+import Lexer from "./lex/lexer";
 
 let miniscriptModules: MiniscriptModule[] = [BitcoinMiniscript];
 

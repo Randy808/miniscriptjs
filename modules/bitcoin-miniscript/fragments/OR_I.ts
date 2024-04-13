@@ -1,5 +1,5 @@
-import { COMMA, CLOSE_PAREN } from "../../../universal-tokens";
-import { lexKeyword } from "../../../lex-utils";
+import { COMMA, CLOSE_PAREN } from "../../../lex/universal-tokens";
+import { lexKeyword } from "../../../lex/lex-utils";
 import {
   sanityCheck,
   TypeDescriptions,
@@ -11,7 +11,7 @@ import {
   LexState,
   Token,
 } from "../../../types";
-import { ParseContext } from "../../../parser";
+import { ParseContext } from "../../../parse/parser";
 import { indent } from "../../../utils";
 
 export class OR_I

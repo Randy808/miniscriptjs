@@ -1,4 +1,4 @@
-import { Token } from "./types";
+import { Token } from "../types";
 
 
 export function matchToken(a: Token[], b: string) {

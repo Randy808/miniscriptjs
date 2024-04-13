@@ -1,4 +1,4 @@
-import { COLON } from "./universal-tokens";
+import { COLON } from "../lex/universal-tokens";
 import { matchToken } from "./parse-utils";
 
 export class Parser {

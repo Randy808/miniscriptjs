@@ -1,14 +1,14 @@
-import { lexKeyword } from "../../../lex-utils";
+import { lexKeyword } from "../../../lex/lex-utils";
 import { Types } from "../../../miniscript-types";
-import { eat } from "../../../parse-utils";
-import { ParseContext } from "../../../parser";
+import { eat } from "../../../parse/parse-utils";
+import { ParseContext } from "../../../parse/parser";
 import {
   MiniscriptFragmentStatic,
   MiniscriptFragment,
   LexState,
   Token,
 } from "../../../types";
-import { OPEN_PAREN, STRING, CLOSE_PAREN } from "../../../universal-tokens";
+import { OPEN_PAREN, STRING, CLOSE_PAREN } from "../../../lex/universal-tokens";
 
 export class HASH160
   extends MiniscriptFragmentStatic

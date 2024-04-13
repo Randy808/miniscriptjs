@@ -1,4 +1,4 @@
-import { lexKeyword } from "../../../lex-utils";
+import { lexKeyword } from "../../../lex/lex-utils";
 import {
   hasType,
   sanityCheck,

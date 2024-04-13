@@ -1,4 +1,4 @@
-import { TokenClass, Token, LexState } from "./types";
+import { TokenClass, Token, LexState } from "../types";
 import {
   OPEN_PAREN,
   CLOSE_PAREN,

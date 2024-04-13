@@ -1,5 +1,5 @@
-import { CLOSE_PAREN, NUMBER } from "../../../universal-tokens";
-import { lexKeyword } from "../../../lex-utils";
+import { CLOSE_PAREN, NUMBER } from "../../../lex/universal-tokens";
+import { lexKeyword } from "../../../lex/lex-utils";
 import { sanityCheck, Types } from "../../../miniscript-types";
 import {
   LexState,
@@ -8,7 +8,7 @@ import {
   Token,
 } from "../../../types";
 import { calculateByteLenForValue } from "../../../utils";
-import { ParseContext } from "../../../parser";
+import { ParseContext } from "../../../parse/parser";
 
 export class OLDER
   extends MiniscriptFragmentStatic

@@ -1,13 +1,13 @@
-import { lexKeyword } from "../../../lex-utils";
+import { lexKeyword } from "../../../lex/lex-utils";
 import { Types } from "../../../miniscript-types";
-import { ParseContext } from "../../../parser";
+import { ParseContext } from "../../../parse/parser";
 import {
   MiniscriptFragmentStatic,
   MiniscriptFragment,
   LexState,
   Token,
 } from "../../../types";
-import { OPEN_PAREN, STRING, CLOSE_PAREN } from "../../../universal-tokens";
+import { OPEN_PAREN, STRING, CLOSE_PAREN } from "../../../lex/universal-tokens";
 
 export class RIPEMD160
   extends MiniscriptFragmentStatic

@@ -1,5 +1,5 @@
-import { COMMA, CLOSE_PAREN, NUMBER } from "../../../universal-tokens";
-import { lexKeyword } from "../../../lex-utils";
+import { COMMA, CLOSE_PAREN, NUMBER } from "../../../lex/universal-tokens";
+import { lexKeyword } from "../../../lex/lex-utils";
 
 import { sanityCheck, Types } from "../../../miniscript-types";
 import {
@@ -8,7 +8,7 @@ import {
   Token,
   MiniscriptFragmentStatic,
 } from "../../../types";
-import { ParseContext } from "../../../parser";
+import { ParseContext } from "../../../parse/parser";
 import { calculateByteLenForValue } from "../../../utils";
 
 export class INP_VALUE

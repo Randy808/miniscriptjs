@@ -1,4 +1,4 @@
-import { ParseContext } from "./parser";
+import { ParseContext } from "./parse/parser";
 
 export interface MiniscriptModule {
   wrappers: any[],

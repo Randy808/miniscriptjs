@@ -3,11 +3,14 @@
 MiniscriptJS is a library designed for ease of use and extensibility. It is a work in progress and should not be used outside experimentation purposes.
 
 ## Quick start
+Open `ts-node` and enter the following:
 
 ```
 let rootExpression = Miniscript.parse("thresh(1,pk(0xA),s:pk(0xB))");
 console.log(rootExpression.toScript());
 ```
+
+This should output the human-readable script ASM for the given Miniscript expression.
 
 ###### Currently the library will accept any string as a key expression as long as it starts with a '0'
 

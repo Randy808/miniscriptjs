@@ -202,4 +202,37 @@ export class THRESH
       script + " " + this.k + " " + (verify ? `OP_EQUALVERIFY` : `OP_EQUAL`)
     );
   };
+
+  static fromScript = (scriptParseContext: any) => {
+    let { reversedScript } = scriptParseContext;
+    if (reversedScript[0] != "OP_EQUAL") {
+      return;
+    }
+    let threshold = parseInt(reversedScript[1]);
+    if (isNaN(threshold)) {
+      return;
+    }
+
+    reversedScript.shift();
+    reversedScript.shift();
+
+    let i = threshold;
+    let x;
+    let children: any[] = [];
+    do {
+      if (i + 1 < threshold) {
+        let OP_ADD = reversedScript.shift();
+        if (OP_ADD != "OP_ADD") {
+          throw new Error();
+        }
+      }
+
+      x = scriptParseContext.parser.parseScript(reversedScript);
+      if(x) {
+        children.push(x);
+      }
+    } while (x);
+
+    return new THRESH(children, threshold);
+  };
 }

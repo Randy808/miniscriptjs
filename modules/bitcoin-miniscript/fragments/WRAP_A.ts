@@ -86,6 +86,6 @@ export class WRAP_A
   };
 
   toScript = () => {
-    return `TOALTSTACK ${this.children[0].toScript()} FROMALTSTACK`;
+    return `OP_TOALTSTACK ${this.children[0].toScript()} OP_FROMALTSTACK`;
   };
 }

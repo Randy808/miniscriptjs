@@ -1,6 +1,5 @@
 import { lexKeyword } from "../../../lex-utils";
 import { Types } from "../../../miniscript-types";
-import { eat } from "../../../parse-utils";
 import { ParseContext } from "../../../parser";
 import {
   MiniscriptFragmentStatic,
@@ -55,7 +54,9 @@ export class SHA256
     parseContext.eat(CLOSE_PAREN.tokenType);
 
     if (!stringToken?.value) {
-      throw new Error(`String not found while parsing string in ${SHA256.tokenType}`);
+      throw new Error(
+        `String not found while parsing string in ${SHA256.tokenType}`
+      );
     }
 
     return new SHA256(stringToken.value as string);

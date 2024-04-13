@@ -1,0 +1,18 @@
+{
+  "name": "miniscriptjs",
+  "version": "1.0.0",
+  "description": "MiniscriptJS is a library designed for ease of use and extensibility. It is a work in progress and should not be used outside experimentation purposes.",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/mocha": "^10.0.6",
+    "ts-jest": "^29.1.2"
+  }
+}

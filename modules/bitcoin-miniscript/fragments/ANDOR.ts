@@ -171,7 +171,7 @@ export class ANDOR
       `\n${indent(this.children[2].toScript())}\n` +
       `OP_ELSE` +
       `\n${indent(this.children[1].toScript())}\n` +
-      `OP_ENDIF`
+      `OP_ENDIF\n`
     );
   };
 }

@@ -21,6 +21,25 @@ export class Parser {
     return this.parseContext.parseWrappedExpression();
   };
 
+  parseScript = (reversedScript: string[]) => {
+    let fragments = [...this.wrappers, ...this.expressions];
+    while (reversedScript.length) {
+      for (let c of fragments) {
+        if ((c as any).fromScript) {
+          let scriptParseContext = {
+            parser: this,
+            reversedScript: reversedScript
+          }
+          let n = (c as any).fromScript(scriptParseContext);
+          if (n) {
+            return n;
+          }
+        }
+      }
+      // throw new Error("No matches found");
+    }
+  };
+
   private parseWrappedExpression = (parseContext: any) => {
     for (let wrapperClass of this.wrappers) {
       if (

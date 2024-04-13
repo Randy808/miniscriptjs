@@ -1,4 +1,4 @@
-import { NUMBER } from "../../../universal-tokens";
+import { CLOSE_PAREN, NUMBER } from "../../../universal-tokens";
 import { lexKeyword } from "../../../lex-utils";
 import { Types } from "../../../miniscript-types";
 import {
@@ -37,9 +37,11 @@ export class AFTER
   static parse = (parseContext: ParseContext) => {
     parseContext.eat(this.tokenType);
 
-    let locktime = NUMBER.parse(parseContext);
+    let locktime = parseContext.eat(NUMBER.tokenType)?.value;
 
     this.validateLocktime(locktime);
+
+    parseContext.eat(CLOSE_PAREN.tokenType);
 
     return new AFTER(locktime);
   };
@@ -77,15 +79,21 @@ export class AFTER
     return `${this.locktime} OP_CHECKLOCKTIMEVERIFY`;
   };
 
-  static fromScript = (opcodes: string[]) => {
-    let locktime = parseInt(opcodes[1]);
+  static fromScript = (scriptParseContext: any) => {
+    let {reversedScript} = scriptParseContext;
+    if (reversedScript[0] != "OP_CHECKLOCKTIMEVERIFY") {
+      return;
+    }
+
+    let locktime = parseInt(reversedScript[1]);
     if (isNaN(locktime)) {
       return;
     }
 
-    if (opcodes[0] == "OP_CHECKLOCKTIMEVERIFY") {
-      return new AFTER(locktime);
-    }
+    reversedScript.shift();
+    reversedScript.shift();
+
+    return new AFTER(locktime);
   };
 
   private static validateLocktime(locktime: number) {

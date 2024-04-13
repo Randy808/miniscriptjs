@@ -28,4 +28,12 @@ export default class Miniscript {
     let parser = new Parser(expressions, wrappers);
     return parser.parse(tokens);
   }
+
+  static parseScript(
+    input: string,
+  ): any {
+    let parser = new Parser(expressions, wrappers);
+    let reversedScript = input.split(" ").reverse();
+    return parser.parseScript(reversedScript);
+  }
 }

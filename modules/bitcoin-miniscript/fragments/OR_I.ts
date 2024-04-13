@@ -119,8 +119,8 @@ export class OR_I
       `OP_IF` +
       `\n${indent(this.children[0].toScript())}\n` +
       `OP_ELSE` +
-      `\n${this.children[1].toScript()}\n` +
-      `OP_ENDIF`
+      `\n${indent(this.children[1].toScript())}\n` +
+      `OP_ENDIF\n`
     );
   };
 }

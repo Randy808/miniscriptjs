@@ -7,6 +7,7 @@ import {
   Token,
   MiniscriptWrapper,
 } from "../../../types";
+import { indent } from "../../../utils";
 
 export class WRAP_D
   extends MiniscriptFragmentStatic
@@ -94,6 +95,8 @@ export class WRAP_D
   };
 
   toScript = () => {
-    return `OP_DUP OP_IF ${this.children[0].toScript()} OP_ENDIF`;
+    return (
+      `OP_DUP OP_IF` + `\n${indent(this.children[0].toScript())}\n` + `OP_ENDIF`
+    );
   };
 }

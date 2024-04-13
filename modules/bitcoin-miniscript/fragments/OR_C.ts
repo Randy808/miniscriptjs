@@ -126,7 +126,7 @@ export class OR_C
     return (
       `${this.children[0].toScript()} OP_NOTIF` +
       `\n${indent(this.children[1].toScript())}\n` +
-      `OP_ENDIF`
+      `OP_ENDIF\n`
     );
   };
 }

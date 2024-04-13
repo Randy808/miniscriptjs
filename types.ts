@@ -1,8 +1,11 @@
 import { MiniscriptParseContext } from "./parse/parser";
 
+type MiniscriptFragmentConstructor = new (...args: any[]) => MiniscriptFragment;
+type MiniscriptWrapperConstructor = new (...args: any[]) => MiniscriptWrapper;
+
 export interface MiniscriptModule {
-  wrappers: any[],
-  expressions: any[]
+  wrappers: MiniscriptWrapperConstructor[];
+  expressions: MiniscriptFragmentConstructor[];
 }
 
 export interface MiniscriptFragment {
@@ -14,8 +17,7 @@ export interface MiniscriptFragment {
 
 export abstract class MiniscriptWrapper {
   protected static parseWrapper: (
-    tokens: Token[],
-    e: any
+    tokens: Token[]
   ) => MiniscriptFragment;
 }
 

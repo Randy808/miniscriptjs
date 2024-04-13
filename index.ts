@@ -31,7 +31,7 @@ export default class Miniscript {
 
   static parseScript(
     input: string,
-  ): any {
+  ): string {
     let parser = new MiniscriptParser(expressions, wrappers);
     let reversedScript = input.split(" ").reverse();
     return parser.parseScript(reversedScript);

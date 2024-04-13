@@ -21,23 +21,27 @@ export class MiniscriptParser {
     return this.parseContext.parseWrappedExpression();
   };
 
-  parseScript = (reversedScript: string[]) => {
+  parseScript = (reversedScript: string[]): string => {
     let fragments = [...this.wrappers, ...this.expressions];
     while (reversedScript.length) {
       for (let c of fragments) {
         if ((c as any).fromScript) {
           let scriptParseContext = {
             parser: this,
-            reversedScript: reversedScript
-          }
+            reversedScript: reversedScript,
+          };
           let n = (c as any).fromScript(scriptParseContext);
           if (n) {
             return n;
           }
         }
       }
-      // throw new Error("No matches found");
+      throw new Error(
+        `Failed to parse script ${reversedScript.reverse().join(" ")}`
+      );
     }
+
+    throw new Error(`Please enter a valid script`);
   };
 
   private parseWrappedExpression = (parseContext: any) => {

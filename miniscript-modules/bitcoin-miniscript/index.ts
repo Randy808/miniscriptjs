@@ -13,6 +13,7 @@ import { OR_B } from "./fragments/OR_B";
 import { OR_C } from "./fragments/OR_C";
 import { OR_D } from "./fragments/OR_D";
 import { OR_I } from "./fragments/OR_I";
+import { PK } from "./fragments/PK";
 import { PK_H } from "./fragments/PK_H";
 import { PK_K } from "./fragments/PK_K";
 import { PKH } from "./fragments/PKH";
@@ -63,6 +64,6 @@ export default {
     RIPEMD160,
     SHA256,
     THRESH,
-    WRAP_C,
+    PK
   ],
 };

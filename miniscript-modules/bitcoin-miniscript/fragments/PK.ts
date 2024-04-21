@@ -7,13 +7,10 @@ import {
 } from "../../../types";
 import { MiniscriptParseContext } from "../../../parse/parser";
 import { WRAP_C } from "./WRAP_C";
-import { PK_H } from "./PK_H";
+import { PK_K } from "./PK_K";
 
-export class PKH
-  extends MiniscriptFragmentStatic
-  implements MiniscriptFragment
-{
-  static tokenType = "PKH";
+export class PK extends MiniscriptFragmentStatic implements MiniscriptFragment {
+  static tokenType = "PK";
   children: MiniscriptFragment[];
   type: number;
 
@@ -25,7 +22,7 @@ export class PKH
 
   static lex = (s: string, state: LexState): Token | undefined => {
     let position = state.cursor;
-    if (lexKeyword(s, "pkh(", state)) {
+    if (lexKeyword(s, "pk(", state)) {
       return {
         tokenType: this.tokenType,
         position,
@@ -33,14 +30,19 @@ export class PKH
     }
   };
 
-  static parse = (parseContext:MiniscriptParseContext) => {
-    let alteredToken = parseContext.eat(this.tokenType);
-    alteredToken.tokenType = PK_H.tokenType;
+  static parse = (parseContext: MiniscriptParseContext) => {
+    //replace pk token type with WRAP_C for compatibility in parsing
+    parseContext.eat(this.tokenType);
 
-    parseContext.tokens.unshift(alteredToken);
-    let pk_h = PK_H.parse(parseContext);
-    let wrap_c = new WRAP_C([pk_h]);
-    return new PKH([wrap_c]);
+    parseContext.tokens.unshift({
+      tokenType: PK_K.tokenType,
+    });
+
+    parseContext.tokens.unshift({
+      tokenType: WRAP_C.tokenType,
+    });
+
+    return WRAP_C.parseWrapper(parseContext);
   };
 
   getType = () => {

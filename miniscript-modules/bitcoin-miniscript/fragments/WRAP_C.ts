@@ -29,35 +29,11 @@ export class WRAP_C
 
   static lex = (s: string, state: LexState): Token | undefined => {
     let position = state.cursor;
-    if (lexKeyword(s, "pk(", state)) {
-      return {
-        tokenType: WRAP_C.tokenType,
-        position,
-        skipWrapper: true,
-      };
-    }
-
     if (lexKeyword(s, "c", state)) {
       return {
         tokenType: WRAP_C.tokenType,
         position,
       };
-    }
-  };
-
-  static parse = (parseContext: any) => {
-    parseContext.eat(this.tokenType);
-
-    try {
-      parseContext.tokens.unshift({
-        tokenType: PK_K.tokenType,
-      });
-
-      let child = PK_K.parse(parseContext);
-
-      return new WRAP_C([child]);
-    } catch (e: any) {
-      throw new Error(`Error parsing PK:\n${e.stack}`);
     }
   };
 

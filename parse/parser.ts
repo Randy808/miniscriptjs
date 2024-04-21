@@ -82,7 +82,7 @@ export class MiniscriptParser {
       }
     }
 
-    throw new Error("Expression not found");
+    throw new Error(`Expression not found for token with value ${JSON.stringify(parseContext.peekToken().value)}`);
   };
 }
 

@@ -1,11 +1,22 @@
 import { MiniscriptParseContext } from "./parse/parser";
 
-type MiniscriptFragmentConstructor = new (...args: any[]) => MiniscriptFragment;
-type MiniscriptWrapperConstructor = new (...args: any[]) => MiniscriptWrapper;
+// Represents a class literal implementing MiniscriptFragmentStatic
+export type MiniscriptFragmentClass = {
+  tokenType: string;
+  parse: (m: MiniscriptParseContext) => MiniscriptFragment;
+  new (...args: any[]): MiniscriptFragmentStatic;
+};
+
+// Represents a class literal implementing MiniscriptWrapper
+export type MiniscriptWrapperClass = {
+  tokenType: string;
+  parseWrapper: (m: MiniscriptParseContext) => MiniscriptFragment;
+  new (...args: any[]): MiniscriptWrapper;
+};
 
 export interface MiniscriptModule {
-  wrappers: MiniscriptWrapperConstructor[];
-  expressions: MiniscriptFragmentConstructor[];
+  wrappers: MiniscriptWrapperClass[];
+  expressions: MiniscriptFragmentClass[];
 }
 
 export interface MiniscriptFragment {
@@ -16,9 +27,7 @@ export interface MiniscriptFragment {
 }
 
 export abstract class MiniscriptWrapper {
-  protected static parseWrapper: (
-    tokens: Token[]
-  ) => MiniscriptFragment;
+  static tokenType: string;
 }
 
 export interface LexState {

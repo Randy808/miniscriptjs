@@ -1,6 +1,6 @@
-import { AFTER } from "../modules/bitcoin-miniscript/fragments/AFTER";
+import { AFTER } from "../miniscript-modules/bitcoin-miniscript/fragments/AFTER";
 import { MiniscriptParser } from "../parse/parser";
-import BitcoinMiniscript from "../modules/bitcoin-miniscript";
+import BitcoinMiniscript from "../miniscript-modules/bitcoin-miniscript";
 
 test("AFTER can decode Script", () => {
   let script = "4 OP_CHECKLOCKTIMEVERIFY";

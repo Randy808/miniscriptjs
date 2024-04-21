@@ -1,23 +1,30 @@
 import { COLON } from "../lex/universal-tokens";
+import {
+  MiniscriptFragmentClass,
+  MiniscriptWrapperClass,
+  Token,
+} from "../types";
 import { matchToken } from "./parse-utils";
 
 export class MiniscriptParser {
-  expressions: any[];
-  wrappers: any;
-  parseContext: any;
+  expressions: MiniscriptFragmentClass[];
+  wrappers: MiniscriptWrapperClass[];
+  parseContext: MiniscriptParseContext;
 
-  constructor(expressions: any[], wrappers: any[]) {
+  constructor(
+    expressions: MiniscriptFragmentClass[],
+    wrappers: MiniscriptWrapperClass[]
+  ) {
     this.expressions = expressions;
     this.wrappers = wrappers;
-  }
-
-  parse = (tokens: any[]) => {
     this.parseContext = new MiniscriptParseContext(
-      tokens,
       this.parseExpression,
       this.parseWrappedExpression
     );
+  }
 
+  parse = (tokens: Token[]) => {
+    this.parseContext.reset(tokens);
     return this.parseContext.parseWrappedExpression();
   };
 
@@ -44,7 +51,7 @@ export class MiniscriptParser {
     throw new Error(`Please enter a valid script`);
   };
 
-  private parseWrappedExpression = (parseContext: any) => {
+  private parseWrappedExpression = (parseContext: MiniscriptParseContext) => {
     for (let wrapperClass of this.wrappers) {
       if (
         !parseContext.tokens[0].skipWrapper &&
@@ -68,7 +75,7 @@ export class MiniscriptParser {
     return parseContext.parseExpression(parseContext);
   };
 
-  private parseExpression = (parseContext: any) => {
+  private parseExpression = (parseContext: MiniscriptParseContext) => {
     for (let expression of this.expressions) {
       if (matchToken(parseContext.tokens, expression.tokenType)) {
         return expression.parse(parseContext);
@@ -82,13 +89,19 @@ export class MiniscriptParser {
 export class MiniscriptParseContext {
   parseExpression: any;
   parseWrappedExpression: any;
+  parsingWrapper: boolean;
   tokens: any;
 
-  constructor(tokens: any, parseExpression: any, parseWrappedExpression: any) {
-    this.tokens = tokens;
+  constructor(parseExpression: any, parseWrappedExpression: any) {
+    this.tokens = [];
     this.parseExpression = () => parseExpression(this);
     this.parseWrappedExpression = () => parseWrappedExpression(this);
+    this.parsingWrapper = false;
   }
+
+  reset = (tokens: any[]) => {
+    this.tokens = tokens;
+  };
 
   eat = (tokenType: string) => {
     if (this.tokens.length && this.tokens[0].tokenType == tokenType) {

@@ -63,6 +63,26 @@ export class PK_K
     return 34;
   };
 
+  static fromScript = (scriptParseContext: any) => {
+    let { reversedScript } = scriptParseContext;
+    
+    // TODO: Fix this to distinguish between strings (see miniscript-types.ts)
+    // sloppy but this'll work as a last resort to parsing a string
+    try {
+      return scriptParseContext.parseScript(reversedScript)
+    }
+    catch(e) {
+      // TODO: Change this like the above says
+      // This can't tell an unimplemented opcode from a random string
+      let k = reversedScript.shift();
+      console.log("Unrecognized k", k)
+      if(k == 'b') {
+        console.log()
+      }
+      return new PK_K(k);
+    }
+  }
+
   toScript = () => {
     return this.value;
   };

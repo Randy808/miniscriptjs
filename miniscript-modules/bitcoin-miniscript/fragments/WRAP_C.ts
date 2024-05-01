@@ -69,7 +69,7 @@ export class WRAP_C
   };
 
   toScript = (verify: boolean = false) => {
-    return `${(this.children[0] as any).toScript()} CHECKSIG${
+    return `${(this.children[0] as any).toScript()} OP_CHECKSIG${
       verify ? "VERIFY" : ""
     }`;
   };

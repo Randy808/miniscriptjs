@@ -60,10 +60,11 @@ export default {
     OR_I,
     PKH,
     PK_H,
-    PK_K,
     RIPEMD160,
     SHA256,
     THRESH,
-    PK
+    PK,
+    // TODO: Change decodeScript to distinguish between string fragments so this can be moved anywhere
+    PK_K,// Needs to be here for script parsing 
   ],
 };

@@ -1,4 +1,5 @@
 import { COLON } from "../lex/universal-tokens";
+import { WRAP_S } from "../miniscript-modules/bitcoin-miniscript/fragments/WRAP_S";
 import {
   MiniscriptFragmentClass,
   MiniscriptWrapperClass,
@@ -28,17 +29,22 @@ export class MiniscriptParser {
     return this.parseContext.parseWrappedExpression();
   };
 
-  parseScript = (reversedScript: string[]): string => {
+  parseScript = (reversedScript: string[]): any => {
     let fragments = [...this.wrappers, ...this.expressions];
+
+    let scriptParseContext = {
+      parser: this,
+      reversedScript: reversedScript,
+    };
+
     while (reversedScript.length) {
       for (let c of fragments) {
         if ((c as any).fromScript) {
-          let scriptParseContext = {
-            parser: this,
-            reversedScript: reversedScript,
-          };
           let n = (c as any).fromScript(scriptParseContext);
           if (n) {
+            if(reversedScript[0] == "OP_SWAP") {
+              return WRAP_S.fromScript(scriptParseContext, n);
+            }
             return n;
           }
         }
@@ -48,7 +54,9 @@ export class MiniscriptParser {
       );
     }
 
-    throw new Error(`Please enter a valid script`);
+    return;
+    // throw new Error(`Please enter a valid script`);
+    // throw new Error(`Unable to parse fragment ending with ${reversedScript[0]}`);
   };
 
   private parseWrappedExpression = (parseContext: MiniscriptParseContext) => {

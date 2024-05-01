@@ -52,7 +52,7 @@ export class THRESH
       if (i == 0) {
         if (!(childType & Types.BaseType)) {
           throw new Error(
-            `${this} could not be constructed: argument ${
+            `${THRESH.tokenType} could not be constructed: argument ${
               i + 1
             } must take an element from the top of the stack and put an element on the stack`
           );
@@ -60,7 +60,7 @@ export class THRESH
       } else {
         if (!(childType & Types.WrappedType)) {
           throw new Error(
-            `${this} could not be constructed: argument ${
+            `${THRESH.tokenType} could not be constructed: argument ${
               i + 1
             } must take an element from one or more element(s) below the top of the stack and put an element on the stack`
           );
@@ -69,7 +69,7 @@ export class THRESH
 
       if (!(childType & Types.DissatisfiableProperty)) {
         throw new Error(
-          `${this} could not be constructed: argument ${
+          `${THRESH.tokenType} could not be constructed: argument ${
             i + 1
           } must be dissatisfiable`
         );
@@ -208,6 +208,8 @@ export class THRESH
     if (reversedScript[0] != "OP_EQUAL") {
       return;
     }
+
+    //Current parsing can't mix up number and hash so more validation is unnecessary
     let threshold = parseInt(reversedScript[1]);
     if (isNaN(threshold)) {
       return;
@@ -216,11 +218,11 @@ export class THRESH
     reversedScript.shift();
     reversedScript.shift();
 
-    let i = threshold;
+    let i = 0;
     let x;
     let children: any[] = [];
     do {
-      if (i + 1 < threshold) {
+      if (++i < threshold) {
         let OP_ADD = reversedScript.shift();
         if (OP_ADD != "OP_ADD") {
           throw new Error();
@@ -233,6 +235,6 @@ export class THRESH
       }
     } while (x);
 
-    return new THRESH(children, threshold);
+    return new THRESH(children.reverse(), threshold);
   };
 }

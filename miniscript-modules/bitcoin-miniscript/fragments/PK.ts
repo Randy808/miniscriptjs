@@ -53,6 +53,17 @@ export class PK extends MiniscriptFragmentStatic implements MiniscriptFragment {
     return this.children[0].getSize();
   };
 
+  static fromScript = (scriptParseContext: any) => {
+    let { reversedScript } = scriptParseContext;
+    if (reversedScript[0] != "OP_CHECKSIG") {
+      return;
+    }
+
+    reversedScript.shift();
+    let keyExpression = scriptParseContext.parser.parseScript(reversedScript);
+    return new WRAP_C([keyExpression]);
+  };
+
   toScript = () => {
     return this.children[0].toScript();
   };

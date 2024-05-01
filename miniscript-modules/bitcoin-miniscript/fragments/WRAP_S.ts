@@ -1,5 +1,9 @@
 import { lexKeyword } from "../../../lex/lex-utils";
-import { sanityCheck, TypeDescriptions, Types } from "../../../miniscript-types";
+import {
+  sanityCheck,
+  TypeDescriptions,
+  Types,
+} from "../../../miniscript-types";
 import {
   MiniscriptFragment,
   MiniscriptFragmentStatic,
@@ -81,6 +85,24 @@ export class WRAP_S
         Types.ExpensiveVerify);
 
     return type;
+  };
+
+  //TODO: Revisit this logic
+  static fromScript = (scriptParseContext: any, s: any = undefined) => {
+    let { reversedScript } = scriptParseContext;
+    if (!s) {
+      return;
+    }
+
+    try {
+      //Try to wrap element in OP_SWAP
+      let wrap_s = new WRAP_S([s]);
+      reversedScript.shift();
+      return wrap_s;
+    } catch (e) {
+      //Just return the element if it fails
+      return s;
+    }
   };
 
   toScript = () => {

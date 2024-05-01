@@ -66,6 +66,23 @@ export class HASH160
     return 27;
   }
 
+  static fromScript = (scriptParseContext: any) => {
+    let { reversedScript } = scriptParseContext;
+    if (reversedScript[0] != "OP_EQUAL") {
+      return;
+    }
+
+    if(reversedScript[2] != "OP_HASH160") {
+      return;
+    }
+
+    reversedScript.shift();
+    let hash = reversedScript.shift();
+    reversedScript.shift();
+    
+    return new HASH160(hash);
+  }
+
   toScript = () => {
     return `OP_SIZE 32 OP_EQUALVERIFY OP_HASH160 ${this.hash} OP_EQUAL`;
   };
